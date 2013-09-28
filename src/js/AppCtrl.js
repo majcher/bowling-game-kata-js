@@ -4,12 +4,12 @@ function AppCtrl($scope) {
 
 	$scope.totalPins = _.range(1, 11);
 
-	$scope.currentValue = function() {
+	$scope.currentValue = function () {
 		return $scope.score.value;
 	}
 
-    $scope.add = function(pins) {
-        $scope.score.add(pins);
-    }
+	$scope.add = function (pins) {
+		$scope.score.add(pins);
+	}
 
 }
