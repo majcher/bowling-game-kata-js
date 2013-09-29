@@ -26,4 +26,10 @@ describe("Frame", function () {
 		expect(frame.isSpare()).toBeFalsy();
 	});
 
+	it("should be a spare when total score is equal to 10", function () {
+		frame.add(1);
+		frame.add(9);
+		expect(frame.isSpare()).toBeTruthy();
+	});
+
 });

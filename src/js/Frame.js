@@ -20,5 +20,5 @@ Frame.prototype.add = function(pins) {
 }
 
 Frame.prototype.isSpare = function() {
-	return false;
+	return (this.firstRollPins + this.secondRollPins) == 10;
 }
