@@ -47,4 +47,15 @@ describe("Frame", function () {
 		expect(frame.isClosed()).toBeTruthy();
 	});
 
+	it("should throw 'Frame closed' error on adding 3rd result", function () {
+		frame.add(1);
+		frame.add(1);
+		expect(function() { frame.add(1) }).toThrow(new Error("Frame closed"));
+	});
+
+	it("should throw 'Frame closed' error on adding result after strike", function () {
+		frame.add(10);
+		expect(function() { frame.add(1) }).toThrow(new Error("Frame closed"));
+	});
+
 });

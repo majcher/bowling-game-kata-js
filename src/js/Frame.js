@@ -1,29 +1,29 @@
 function Frame() {
-	this.firstRollPins;
-	this.secondRollPins;
+	this.firstScore;
+	this.secondScore;
 }
 
 Frame.prototype.isClosed = function() {
-	var allRollsDone = this.firstRollPins != undefined && this.secondRollPins != undefined;
+	var allRollsDone = this.firstScore != undefined && this.secondScore != undefined;
 	return allRollsDone || this.isStrike();
 }
 
 Frame.prototype.add = function(pins) {
 	if (this.isClosed())
-		throw "Frame closed";
+		throw new Error("Frame closed");
 
-	if (this.firstRollPins === undefined) {
-		this.firstRollPins = pins;
+	if (this.firstScore === undefined) {
+		this.firstScore = pins;
 		return;
 	}
 
-	this.secondRollPins = pins;
+	this.secondScore = pins;
 }
 
 Frame.prototype.isSpare = function() {
-	return (this.firstRollPins + this.secondRollPins) == 10;
+	return (this.firstScore + this.secondScore) == 10;
 }
 
 Frame.prototype.isStrike = function() {
-	return this.firstRollPins == 10;
+	return this.firstScore == 10;
 }
