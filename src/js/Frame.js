@@ -4,7 +4,8 @@ function Frame() {
 }
 
 Frame.prototype.isClosed = function() {
-	return this.firstRollPins != undefined && this.secondRollPins != undefined;
+	var allRollsDone = this.firstRollPins != undefined && this.secondRollPins != undefined;
+	return allRollsDone || this.isStrike();
 }
 
 Frame.prototype.add = function(pins) {
@@ -21,4 +22,8 @@ Frame.prototype.add = function(pins) {
 
 Frame.prototype.isSpare = function() {
 	return (this.firstRollPins + this.secondRollPins) == 10;
+}
+
+Frame.prototype.isStrike = function() {
+	return this.firstRollPins == 10;
 }

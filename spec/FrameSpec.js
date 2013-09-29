@@ -26,10 +26,25 @@ describe("Frame", function () {
 		expect(frame.isSpare()).toBeFalsy();
 	});
 
-	it("should be a spare when total score is equal to 10", function () {
+	it("should be a spare when total score is equal to 10 in two rolls", function () {
 		frame.add(1);
 		frame.add(9);
 		expect(frame.isSpare()).toBeTruthy();
+	});
+
+	it("should not be a spare when total score is equal to 10 in first roll", function () {
+		frame.add(10);
+		expect(frame.isSpare()).toBeFalsy();
+	});
+
+	it("should be a strike when total score is equal to 10 in first roll", function () {
+		frame.add(10);
+		expect(frame.isStrike()).toBeTruthy();
+	});
+
+	it("should be closed after a strike", function () {
+		frame.add(10);
+		expect(frame.isClosed()).toBeTruthy();
 	});
 
 });
