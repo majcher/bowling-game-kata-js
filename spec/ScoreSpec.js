@@ -9,9 +9,28 @@ describe("Score", function () {
 		expect(score.value).toEqual(0);
 	});
 
-	it("should be equal to 20 after 20 tries with 1 pin hit each time", function () {
+	it("should be equal to 0 after all misses", function () {
+		for (var i=0; i<20; i++)
+			score.add(0)
+		expect(score.value).toEqual(0);
+	});
+
+	it("should be equal to 20 after one pin knocked down each ball", function () {
 		for (var i=0; i<20; i++)
 			score.add(1)
 		expect(score.value).toEqual(20);
 	});
+
+	it("should be equal to 16 after a spare in the first frame, followed by three pins, followed by all misses", function () {
+		score.add(1)
+		score.add(9)
+
+		score.add(3)
+
+		for (var i=0; i<17; i++)
+			score.add(0)
+
+		expect(score.value).toEqual(16);
+	});
+
 });
