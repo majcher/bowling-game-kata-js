@@ -1,12 +1,10 @@
 function Frame() {
-	this.firstScore;
-	this.secondScore;
-	this.bonusScore = 0;
-	this.bonusClosed = false;
+	this.score = [];
+	this.bonusScore;
 }
 
 Frame.prototype.isClosed = function() {
-	var allRollsDone = this.firstScore != undefined && this.secondScore != undefined;
+	var allRollsDone = this.score[0] != undefined && this.score[1] != undefined;
 	return allRollsDone || this.isStrike();
 }
 
@@ -14,57 +12,42 @@ Frame.prototype.add = function(pins) {
 	if (this.isClosed())
 		throw new Error("Frame closed");
 
-	if (this.firstScore === undefined) {
-		this.firstScore = pins;
-		return;
-	}
-
-	this.secondScore = pins;
+	this.score.push(pins);
 }
 
-Frame.prototype.addBonus = function(nextFrames) {
-	var nextFrame = nextFrames[0];
+Frame.prototype.addBonus = function(followingFrames) {
+	if (this.bonusScore != undefined)
+		return;
+
+	var firstFollowingFrame = followingFrames[0];
+	var secondFollowingFrame = followingFrames[1];
 
 	if (this.isSpare()) {
-		this.bonusScore = nextFrame.firstScore;
-		this.bonusClosed = true;
+		this.bonusScore = firstFollowingFrame.score[0];
 		return;
 	}
 
-	if (this.isStrike()) {
-		if (!nextFrame.isClosed())
-			return;
-
-		if (!nextFrame.isStrike()) {
-			this.bonusScore = nextFrame.firstScore + nextFrame.secondScore;
-		} else {
-			var nextFrameAfter = nextFrames[1];
-			if (nextFrameAfter == undefined) {
-				return;
-			}
-			this.bonusScore = nextFrame.firstScore + nextFrameAfter.firstScore;
+	if (this.isStrike() && firstFollowingFrame.isStrike()) {
+		if (secondFollowingFrame != undefined) {
+			this.bonusScore = firstFollowingFrame.score[0] + secondFollowingFrame.score[0];
 		}
-
-		this.bonusClosed = true;
+		return;
 	}
-}
 
-Frame.prototype.isBonusClosed = function() {
-	return this.bonusClosed;
+	if (this.isStrike() && firstFollowingFrame.isClosed()) {
+		this.bonusScore = firstFollowingFrame.score[0] + firstFollowingFrame.score[1];
+	}
 }
 
 Frame.prototype.isSpare = function() {
-	return (this.firstScore + this.secondScore) == 10;
+	return (this.score[0] + this.score[1]) == 10;
 }
 
 Frame.prototype.isStrike = function() {
-	return this.firstScore == 10;
+	return this.score[0] == 10;
 }
 
 Frame.prototype.getTotalScore = function() {
-	if (this.firstScore == undefined)
-		return 0;
-	if (this.secondScore == undefined)
-		return this.firstScore + this.bonusScore;
-	return this.firstScore + this.secondScore + this.bonusScore;
+	var totalScoreComponents = _.compact([this.score[0], this.score[1], this.bonusScore]);
+	return _.reduce(totalScoreComponents, function(sum, num) { return sum + num}, 0);
 }

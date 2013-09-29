@@ -73,4 +73,47 @@ describe("Score", function () {
 		expect(score.getCurrentValue()).toEqual(20 + 13 + 7);
 	});
 
+	it("should be equal to 256 after 9 strikes followed by 2 and 5 pins", function() {
+		for (var i=0; i<9; i++)
+			score.add(10);
+
+		score.add(2);
+		score.add(5);
+
+		expect(score.getCurrentValue()).toEqual(7*30 + 22 + 17 + 7);
+	});
+
+	it("should be closed after 2 balls on last frame without bonus", function() {
+		for (var i=0; i<10; i++) {
+			score.add(1);
+			score.add(2);
+		}
+
+		expect(score.isClosed()).toBeTruthy();
+	});
+
+	it("should not be closed after 2 balls on last frame with strike bonus", function() {
+		for (var i=0; i<10; i++)
+			score.add(10);
+
+		expect(score.isClosed()).toBeFalsy();
+	});
+
+	it("should not be closed after 2 balls on last frame with spare bonus", function() {
+		for (var i=0; i<9; i++)
+			score.add(10);
+
+		score.add(1);
+		score.add(9);
+
+		expect(score.isClosed()).toBeFalsy();
+	});
+
+	it("should be equal to 300 after 12 strikes", function() {
+		for (var i=0; i<12; i++)
+			score.add(10);
+
+		expect(score.getCurrentValue()).toEqual(300);
+	});
+
 });

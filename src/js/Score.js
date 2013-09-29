@@ -1,5 +1,13 @@
 function Score() {
+	this.NUMBER_OF_FRAMES = 10;
+
 	this.frames = [new Frame()];
+}
+
+Score.prototype.isClosed = function() {
+	var hasAllFrames = this.frames.length == this.NUMBER_OF_FRAMES;
+	var allFramesClosed = _.reduce(this.frames, function(memo, frame) { return memo && frame.isClosed()}, true);
+	return hasAllFrames && allFramesClosed;
 }
 
 Score.prototype.add = function(pins) {
@@ -13,12 +21,14 @@ Score.prototype.add = function(pins) {
 		return;
 	}
 
-	this.frames.push(new Frame());
+	if (this.frames.length < this.NUMBER_OF_FRAMES) {
+		this.frames.push(new Frame());
+	}
 }
 
 Score.prototype.calculateFramesBonus = function() {
 	var calculateBonus = function(frame, frameIdx, allFrames) {
-		if (!frame.isBonusClosed() && frameIdx < allFrames.length-1)
+		if (frameIdx < allFrames.length-1)
 			frame.addBonus(_.rest(allFrames, frameIdx+1));
 	}
 	_.each(this.frames, calculateBonus)
