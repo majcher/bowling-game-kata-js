@@ -1,22 +1,27 @@
 function Score() {
-	this.openFrame = new Frame();
-	this.previousFrame;
-	this.frames = [this.openFrame];
+	this.frames = [new Frame()];
 }
 
 Score.prototype.add = function(pins) {
-	this.openFrame.add(pins);
+	var openFrame = _.last(this.frames);
 
-	if (this.openFrame.isClosed()) {
-		if (this.previousFrame != undefined) {
-			this.previousFrame.addBonus(this.openFrame);
-		}
+	openFrame.add(pins);
 
-		var nextFrame = new Frame();
-		this.frames.push(nextFrame);
-		this.previousFrame = this.openFrame;
-		this.openFrame = nextFrame;
+	this.calculateFramesBonus();
+
+	if (!openFrame.isClosed()) {
+		return;
 	}
+
+	this.frames.push(new Frame());
+}
+
+Score.prototype.calculateFramesBonus = function() {
+	var calculateBonus = function(frame, frameIdx, allFrames) {
+		if (!frame.isBonusClosed() && frameIdx < allFrames.length-1)
+			frame.addBonus(_.rest(allFrames, frameIdx+1));
+	}
+	_.each(this.frames, calculateBonus)
 }
 
 Score.prototype.getCurrentValue = function() {

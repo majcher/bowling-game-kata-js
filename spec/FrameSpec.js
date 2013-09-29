@@ -66,9 +66,35 @@ describe("Frame", function () {
 		nextFrame.add(3);
 		nextFrame.add(0);
 
-		frame.addBonus(nextFrame);
+		frame.addBonus([nextFrame]);
 
 		expect(frame.getTotalScore()).toEqual(13);
+	});
+
+	it("should have total score computed with strike bonus", function () {
+		frame.add(10);
+
+		var nextFrame = new Frame();
+		nextFrame.add(3);
+		nextFrame.add(4);
+
+		frame.addBonus([nextFrame]);
+
+		expect(frame.getTotalScore()).toEqual(17);
+	});
+
+	it("should have total score computed with multiple strike bonus", function () {
+		frame.add(10);
+
+		var nextFrame = new Frame();
+		nextFrame.add(10);
+
+		var nextFrameAfter = new Frame();
+		nextFrameAfter.add(4);
+
+		frame.addBonus([nextFrame, nextFrameAfter]);
+
+		expect(frame.getTotalScore()).toEqual(24);
 	});
 
 });
