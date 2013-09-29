@@ -58,4 +58,17 @@ describe("Frame", function () {
 		expect(function() { frame.add(1) }).toThrow(new Error("Frame closed"));
 	});
 
+	it("should have total score computed with spare bonus", function () {
+		frame.add(1);
+		frame.add(9);
+
+		var nextFrame = new Frame();
+		nextFrame.add(3);
+		nextFrame.add(0);
+
+		frame.addBonus(nextFrame);
+
+		expect(frame.getTotalScore()).toEqual(13);
+	});
+
 });

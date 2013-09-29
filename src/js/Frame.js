@@ -1,6 +1,7 @@
 function Frame() {
 	this.firstScore;
 	this.secondScore;
+	this.bonusScore = 0;
 }
 
 Frame.prototype.isClosed = function() {
@@ -20,10 +21,26 @@ Frame.prototype.add = function(pins) {
 	this.secondScore = pins;
 }
 
+Frame.prototype.addBonus = function(nextFrame) {
+	if (this.isSpare())
+		this.bonusScore = nextFrame.firstScore;
+	else if (this.isStrike()) {
+		this.bonusScore = nextFrame.firstScore + nextFrame.secondScore;
+	}
+}
+
 Frame.prototype.isSpare = function() {
 	return (this.firstScore + this.secondScore) == 10;
 }
 
 Frame.prototype.isStrike = function() {
 	return this.firstScore == 10;
+}
+
+Frame.prototype.getTotalScore = function() {
+	if (this.firstScore == undefined)
+		return 0;
+	if (this.secondScore == undefined)
+		return this.firstScore;
+	return this.firstScore + this.secondScore + this.bonusScore;
 }

@@ -2,10 +2,10 @@ function AppCtrl($scope) {
 
 	$scope.score = new Score();
 
-	$scope.totalPins = _.range(1, 11);
+	$scope.totalPins = _.range(0, 11);
 
 	$scope.currentValue = function () {
-		return $scope.score.value;
+		return $scope.score.getCurrentValue();
 	}
 
 	$scope.add = function (pins) {
