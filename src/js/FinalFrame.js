@@ -1,5 +1,5 @@
-function FinalFrame() {
-	Frame.call(this);
+function FinalFrame(frameNo) {
+	Frame.call(this, frameNo);
 }
 
 FinalFrame.prototype = Object.create(Frame.prototype);

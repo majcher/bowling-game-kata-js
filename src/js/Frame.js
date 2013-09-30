@@ -1,4 +1,5 @@
-function Frame() {
+function Frame(frameNo) {
+	this.frameNo = frameNo;
 	this.score = [];
 	this.bonusScore;
 }
@@ -15,28 +16,8 @@ Frame.prototype.add = function(pins) {
 	this.score.push(pins);
 }
 
-Frame.prototype.addBonus = function(followingFrames) {
-	if (this.bonusScore != undefined)
-		return;
-
-	var firstFollowingFrame = followingFrames[0];
-	var secondFollowingFrame = followingFrames[1];
-
-	if (this.isSpare()) {
-		this.bonusScore = firstFollowingFrame.score[0];
-		return;
-	}
-
-	if (this.isStrike() && firstFollowingFrame.isStrike()) {
-		if (secondFollowingFrame != undefined) {
-			this.bonusScore = firstFollowingFrame.score[0] + secondFollowingFrame.score[0];
-		}
-		return;
-	}
-
-	if (this.isStrike() && firstFollowingFrame.isClosed()) {
-		this.bonusScore = firstFollowingFrame.score[0] + firstFollowingFrame.score[1];
-	}
+Frame.prototype.setBonusScore = function(bonusScore) {
+	this.bonusScore = bonusScore;
 }
 
 Frame.prototype.isSpare = function() {
@@ -48,6 +29,6 @@ Frame.prototype.isStrike = function() {
 }
 
 Frame.prototype.getTotalScore = function() {
-	var totalScoreComponents = _.compact([this.score[0], this.score[1], this.bonusScore]);
+	var totalScoreComponents = _.compact(_.flatten([this.score, this.bonusScore]));
 	return _.reduce(totalScoreComponents, function(sum, num) { return sum + num}, 0);
 }

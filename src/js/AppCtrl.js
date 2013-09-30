@@ -12,4 +12,12 @@ function AppCtrl($scope) {
 		$scope.score.add(pins);
 	}
 
+	$scope.isScoreClosed = function () {
+		return $scope.score.isClosed();
+	}
+
+	$scope.restartScore = function () {
+		$scope.score = new Score();
+	}
+
 }

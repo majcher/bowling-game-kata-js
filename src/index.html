@@ -5,6 +5,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
 	<script src="http://underscorejs.org/underscore.js"></script>
 	<script type="text/javascript" src="js/Frame.js"></script>
+	<script type="text/javascript" src="js/FinalFrame.js"></script>
 	<script type="text/javascript" src="js/Score.js"></script>
 	<script type="text/javascript" src="js/AppCtrl.js"></script>
 </head>
@@ -12,9 +13,11 @@
 <div ng-controller="AppCtrl">
 	<h1>Current value: {{ currentValue() }}</h1>
 
-	<div ng-repeat="pins in totalPins">
+	<div ng-repeat="pins in totalPins" ng-hide="isScoreClosed()">
 		<button ng-click="add(pins)">{{pins}} pin</button>
 	</div>
+
+	<button ng-click="restartScore()" ng-show="isScoreClosed()">Restart game</button>
 </div>
 </body>
 </html>

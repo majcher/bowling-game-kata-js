@@ -116,4 +116,20 @@ describe("Score", function () {
 		expect(score.getCurrentValue()).toEqual(300);
 	});
 
+	it("should be closed after after 12 strikes", function() {
+		for (var i=0; i<12; i++)
+			score.add(10);
+
+		expect(score.isClosed()).toBeTruthy();
+	});
+
+	it("should be closed after after 10 frames without bonus", function() {
+		for (var i=0; i<10; i++) {
+			score.add(1);
+			score.add(2);
+		}
+
+		expect(score.isClosed()).toBeTruthy();
+	});
+
 });
