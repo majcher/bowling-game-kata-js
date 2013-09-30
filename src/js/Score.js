@@ -1,7 +1,8 @@
 function Score() {
 	this.NUMBER_OF_FRAMES = 10;
 
-	this.bowlingFrames = [new Frame(1)];
+	var frameNumber = 1;
+	this.bowlingFrames = [new Frame(frameNumber)];
 }
 
 Score.prototype.isClosed = function() {
@@ -17,23 +18,27 @@ Score.prototype.add = function(pins) {
 
 	this.calculateFramesBonus();
 
-	if (!openFrame.isClosed()) {
+	if (!openFrame.isClosed())
 		return;
-	}
 
-	if (this.bowlingFrames.length < this.NUMBER_OF_FRAMES) {
-		if (this.bowlingFrames.length == this.NUMBER_OF_FRAMES - 1 &&
-			(openFrame.isSpare() || openFrame.isStrike())) {
-			this.bowlingFrames.push(new FinalFrame(openFrame.frameNo+1));
-		} else {
-			this.bowlingFrames.push(new Frame(openFrame.frameNo+1));
-		}
+	var hasAllFrames = this.bowlingFrames.length >= this.NUMBER_OF_FRAMES;
+
+	if (hasAllFrames)
+		return;
+
+	var onlyLastFrameMissing = this.bowlingFrames.length == this.NUMBER_OF_FRAMES - 1;
+	var hasBonus = openFrame.isSpare() || openFrame.isStrike();
+
+	if (onlyLastFrameMissing && hasBonus) {
+		this.bowlingFrames.push(new FinalFrame(openFrame.frameNumber + 1));
+	} else {
+		this.bowlingFrames.push(new Frame(openFrame.frameNumber + 1));
 	}
 }
 
 Score.prototype.calculateFramesBonus = function() {
 	var nextBallScore = function(frame) {
-		var frameIdx = frame.frameNo-1;
+		var frameIdx = frame.frameNumber-1;
 		var nextFrame = this.bowlingFrames[frameIdx + 1];
 		if (nextFrame == undefined)
 			return undefined;
@@ -42,7 +47,7 @@ Score.prototype.calculateFramesBonus = function() {
 	}
 
 	var nextTwoBallsScore = function(frame) {
-		var frameIdx = frame.frameNo-1;
+		var frameIdx = frame.frameNumber-1;
 		var nextFrame = this.bowlingFrames[frameIdx + 1];
 		var nextFrameAfter = this.bowlingFrames[frameIdx + 2];
 		if (nextFrame == undefined)
@@ -51,7 +56,7 @@ Score.prototype.calculateFramesBonus = function() {
 		if (nextFrame.score.length >= 2)
 			return nextFrame.score[0] + nextFrame.score[1];
 
-		if (nextFrameAfter == undefined || nextFrameAfter.score.length == 0)
+		if (_.isUndefined(nextFrameAfter) || nextFrameAfter.score.length == 0)
 			return undefined;
 
 		return nextFrame.score[0] + nextFrameAfter.score[0];
@@ -60,13 +65,13 @@ Score.prototype.calculateFramesBonus = function() {
 	var calculateBonus = function(frame) {
 		if (frame.isSpare()) {
 			var bonus = nextBallScore.call(this, frame);
-			frame.setBonusScore(bonus);
+			frame.bonusScore = bonus;
 			return;
 		}
 
 		if (frame.isStrike()) {
 			var bonus = nextTwoBallsScore.call(this, frame);
-			frame.setBonusScore(bonus);
+			frame.bonusScore = bonus;
 			return;
 		}
 	}

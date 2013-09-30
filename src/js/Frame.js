@@ -1,11 +1,11 @@
-function Frame(frameNo) {
-	this.frameNo = frameNo;
+function Frame(frameNumber) {
+	this.frameNumber = frameNumber;
 	this.score = [];
 	this.bonusScore;
 }
 
 Frame.prototype.isClosed = function() {
-	var allRollsDone = this.score[0] != undefined && this.score[1] != undefined;
+	var allRollsDone = this.score.length == 2;
 	return allRollsDone || this.isStrike();
 }
 
@@ -14,10 +14,6 @@ Frame.prototype.add = function(pins) {
 		throw new Error("Frame closed");
 
 	this.score.push(pins);
-}
-
-Frame.prototype.setBonusScore = function(bonusScore) {
-	this.bonusScore = bonusScore;
 }
 
 Frame.prototype.isSpare = function() {
@@ -29,6 +25,7 @@ Frame.prototype.isStrike = function() {
 }
 
 Frame.prototype.getTotalScore = function() {
-	var totalScoreComponents = _.compact(_.flatten([this.score, this.bonusScore]));
-	return _.reduce(totalScoreComponents, function(sum, num) { return sum + num}, 0);
+	var nonZeroScoreComponents = _.compact(_.flatten([this.score, this.bonusScore]));
+	var sum = function(sum, num) { return sum + num };
+	return _.reduce(nonZeroScoreComponents, sum, 0);
 }
